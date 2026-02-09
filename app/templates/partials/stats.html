@@ -1,0 +1,30 @@
+<div class="card bg-base-100 shadow">
+    <div class="card-body p-4">
+        <h2 class="card-title text-sm">📊 統計</h2>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="stat bg-base-200 rounded-lg p-3">
+                <div class="stat-title text-xs">合計</div>
+                <div class="stat-value text-lg">{{ stats.total }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg p-3">
+                <div class="stat-title text-xs">完了</div>
+                <div class="stat-value text-lg text-success">{{ stats.done }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg p-3">
+                <div class="stat-title text-xs">進行中</div>
+                <div class="stat-value text-lg text-warning">{{ stats.in_progress }}</div>
+            </div>
+            <div class="stat bg-base-200 rounded-lg p-3">
+                <div class="stat-title text-xs">未着手</div>
+                <div class="stat-value text-lg text-base-content/50">{{ stats.not_started }}</div>
+            </div>
+        </div>
+        {% if stats.total > 0 %}
+        <progress class="progress progress-success w-full mt-2"
+                  value="{{ stats.done }}" max="{{ stats.total }}"></progress>
+        <p class="text-xs text-center text-base-content/60">
+            完了率: {{ (stats.done / stats.total * 100)|round|int }}%
+        </p>
+        {% endif %}
+    </div>
+</div>

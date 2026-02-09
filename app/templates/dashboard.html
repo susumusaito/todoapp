@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left: Task list + form (2 cols) -->
+    <div class="lg:col-span-2 space-y-6">
+        {% include "partials/todo_form.html" %}
+        <div id="todo-area">
+            {% include "partials/todo_list_with_stats.html" %}
+        </div>
+    </div>
+    <!-- Right: Stats + AI Coach (1 col) -->
+    <div class="space-y-6">
+        <div id="stats-area">
+            {% include "partials/stats.html" %}
+        </div>
+        <!-- AI Coach -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title text-sm">🤖 AIコーチ</h2>
+                <div id="ai-coach-area">
+                    <p class="text-sm text-base-content/60">ボタンを押すとAIがタスク状況を分析してアドバイスします。</p>
+                </div>
+                <button
+                    class="btn btn-secondary btn-sm mt-2"
+                    hx-post="/ai-coach/generate"
+                    hx-target="#ai-coach-area"
+                    hx-swap="innerHTML"
+                    hx-indicator="#ai-loading"
+                >
+                    アドバイスを生成
+                    <span id="ai-loading" class="htmx-indicator loading loading-spinner loading-xs"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

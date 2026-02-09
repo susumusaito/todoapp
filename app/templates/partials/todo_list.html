@@ -1,0 +1,28 @@
+<div class="card bg-base-100 shadow">
+    <div class="card-body p-4">
+        <h2 class="card-title text-sm">タスク一覧 ({{ todos|length }}件)</h2>
+        {% if todos %}
+        <div class="overflow-x-auto">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>状態</th>
+                        <th>タスク名</th>
+                        <th>優先度</th>
+                        <th>期限</th>
+                        <th>進捗</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for todo in todos %}
+                    {% include "partials/todo_row.html" %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-sm text-base-content/60 py-4 text-center">タスクがありません。上のフォームから追加してください。</p>
+        {% endif %}
+    </div>
+</div>

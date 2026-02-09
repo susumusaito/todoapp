@@ -1,0 +1,78 @@
+<tr id="todo-{{ todo.id }}" class="hover">
+    <td>
+        <span class="badge badge-sm
+            {% if todo.status == '完了' %}badge-success
+            {% elif todo.status == '進行中' %}badge-warning
+            {% else %}badge-ghost{% endif %}">
+            {{ todo.status }}
+        </span>
+    </td>
+    <td>
+        <details class="collapse collapse-arrow">
+            <summary class="collapse-title p-0 min-h-0 text-sm font-medium">
+                {{ todo.title }}
+            </summary>
+            <div class="collapse-content px-0 pt-2">
+                <form
+                    hx-put="/todos/{{ todo.id }}"
+                    hx-target="#todo-area"
+                    hx-swap="innerHTML"
+                    class="space-y-2"
+                >
+                    <input type="text" name="title" value="{{ todo.title }}"
+                           class="input input-bordered input-xs w-full" required>
+                    <div class="flex flex-wrap gap-2">
+                        <select name="status" class="select select-bordered select-xs">
+                            {% for s in ['未着手', '進行中', '完了'] %}
+                            <option value="{{ s }}" {% if todo.status == s %}selected{% endif %}>{{ s }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="priority" class="select select-bordered select-xs">
+                            {% for p in ['高', '中', '低'] %}
+                            <option value="{{ p }}" {% if todo.priority == p %}selected{% endif %}>{{ p }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="date" name="due_date"
+                               value="{{ todo.due_date.isoformat() if todo.due_date else '' }}"
+                               class="input input-bordered input-xs">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs">進捗:</span>
+                        <input type="range" name="progress" min="0" max="100" value="{{ todo.progress }}"
+                               class="range range-xs range-primary flex-1">
+                        <span class="text-xs w-8">{{ todo.progress }}%</span>
+                    </div>
+                    <input type="text" name="notes" value="{{ todo.notes or '' }}" placeholder="メモ"
+                           class="input input-bordered input-xs w-full">
+                    <div class="flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-xs">更新</button>
+                        <button type="button" class="btn btn-error btn-xs"
+                                hx-delete="/todos/{{ todo.id }}"
+                                hx-target="#todo-area"
+                                hx-swap="innerHTML"
+                                hx-confirm="「{{ todo.title }}」を削除しますか？">削除</button>
+                    </div>
+                </form>
+            </div>
+        </details>
+    </td>
+    <td>
+        <span class="badge badge-sm
+            {% if todo.priority == '高' %}badge-error
+            {% elif todo.priority == '低' %}badge-info
+            {% else %}badge-neutral{% endif %}">
+            {{ todo.priority }}
+        </span>
+    </td>
+    <td class="text-xs">{{ todo.due_date.strftime('%m/%d') if todo.due_date else '-' }}</td>
+    <td>
+        <progress class="progress progress-primary w-12" value="{{ todo.progress }}" max="100"></progress>
+    </td>
+    <td>
+        <button class="btn btn-ghost btn-xs"
+                hx-delete="/todos/{{ todo.id }}"
+                hx-target="#todo-area"
+                hx-swap="innerHTML"
+                hx-confirm="「{{ todo.title }}」を削除しますか？">✕</button>
+    </td>
+</tr>
