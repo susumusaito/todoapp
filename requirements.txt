@@ -4,4 +4,4 @@ python-multipart
 jinja2
 sqlmodel
 python-dotenv
-google-genai
+groq
