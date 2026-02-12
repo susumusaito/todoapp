@@ -1,5 +1,6 @@
 import json
 import os
+import urllib.error
 import urllib.request
 
 from .models import Todo
@@ -44,6 +45,9 @@ def generate_coach_advice(todos: list[Todo]) -> str:
         with urllib.request.urlopen(req, timeout=9) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             return data["choices"][0]["message"]["content"]
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")
+        return f"⚠️ AI生成エラー: HTTP {e.code}: {body[:200]}"
     except Exception as e:
         return f"⚠️ AI生成エラー: {type(e).__name__}: {e}"
 
