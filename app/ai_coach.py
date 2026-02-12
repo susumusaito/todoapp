@@ -46,10 +46,11 @@ def generate_coach_advice(todos: list[Todo]) -> str:
             data = json.loads(resp.read().decode("utf-8"))
             return data["choices"][0]["message"]["content"]
     except urllib.error.HTTPError as e:
-        body = e.read().decode("utf-8", errors="replace")
-        return f"⚠️ AI生成エラー: HTTP {e.code}: {body[:200]}"
+        if e.code == 429:
+            return "⚠️ APIのレート制限に達しました。しばらく待ってから再度お試しください。"
+        return f"⚠️ AI生成エラー: HTTP {e.code}"
     except Exception as e:
-        return f"⚠️ AI生成エラー: {type(e).__name__}: {e}"
+        return f"⚠️ AI生成エラー: {e}"
 
 
 def _build_task_summary(todos: list[Todo]) -> str:
