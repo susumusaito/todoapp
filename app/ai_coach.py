@@ -37,6 +37,7 @@ def generate_coach_advice(todos: list[Todo]) -> str:
             headers={
                 "Authorization": f"Bearer {api_key}",
                 "Content-Type": "application/json",
+                "User-Agent": "todoapp/1.0",
             },
         )
 
