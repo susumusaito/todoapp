@@ -22,7 +22,11 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-templates = Jinja2Templates(directory="app/templates")
+
+import os
+
+_base_dir = os.path.dirname(os.path.abspath(__file__))
+templates = Jinja2Templates(directory=os.path.join(_base_dir, "templates"))
 
 
 @app.get("/", response_class=HTMLResponse)
