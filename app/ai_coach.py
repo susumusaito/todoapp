@@ -8,7 +8,7 @@ GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 
 def generate_coach_advice(todos: list[Todo]) -> str:
-    api_key = os.getenv("GROQ_API_KEY")
+    api_key = (os.getenv("GROQ_API_KEY") or "").strip()
     model_name = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
     if not api_key:
