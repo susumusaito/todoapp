@@ -1,6 +1,10 @@
+import json
 import os
+import urllib.request
 
 from .models import Todo
+
+GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 
 def generate_coach_advice(todos: list[Todo]) -> str:
@@ -20,18 +24,27 @@ def generate_coach_advice(todos: list[Todo]) -> str:
     )
 
     try:
-        from groq import Groq
+        payload = json.dumps({
+            "model": model_name,
+            "messages": [{"role": "user", "content": prompt}],
+            "max_tokens": 256,
+            "temperature": 0.7,
+        }).encode("utf-8")
 
-        client = Groq(api_key=api_key)
-        response = client.chat.completions.create(
-            model=model_name,
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=256,
-            temperature=0.7,
+        req = urllib.request.Request(
+            GROQ_API_URL,
+            data=payload,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
         )
-        return response.choices[0].message.content
+
+        with urllib.request.urlopen(req, timeout=9) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return data["choices"][0]["message"]["content"]
     except Exception as e:
-        return f"⚠️ AI生成エラー: {e}"
+        return f"⚠️ AI生成エラー: {type(e).__name__}: {e}"
 
 
 def _build_task_summary(todos: list[Todo]) -> str:
